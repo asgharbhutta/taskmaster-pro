@@ -45,6 +45,71 @@ var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
+$(".list-group").on("click", "p", function() {
+  var text = $(this).text().trim(); // stores the text that's clicked on
+
+  var textInput = $("<textarea>").addClass("form-control").val(text);
+  $(this).replaceWith(textInput);
+  textInput.trigger("focus"); //focuses the box after it's been clicked into
+  
+});
+
+$(".list-group").on("blur", "textarea", function() {
+    //get textarea's current value
+    var text = $(this).val().trim();
+
+    // get the parent ul's id attribute
+    var status = $(this).closest(".list-group").attr("id").replace("list-","");
+
+    // get the task's position in the list of other li elements
+    var index = $(this).closest(".list-group-item").index();
+
+    tasks[status][index].text = text;
+    saveTasks();
+
+    //recreate p element
+    var taskP = $("<p>").addClass("m-1").text(text);
+
+    //replace textarea with p element
+    $(this).replaceWith(taskP);
+
+});
+
+$(".list-group").on("click", "span", function(){
+  //get current text
+  var date = $(this).text().trim();
+
+  //create new input element
+  var dateInput = $("<input>").attr("type","text").addClass("form-control").val(date);
+  //swap what is there with above
+  $(this).replaceWith(dateInput);
+
+  //focus new element
+  dateInput.trigger("focus");
+
+});
+
+$(".list-group").on("blur","input[type='text']", function(){
+  //get the current text
+  var date = $(this).val().trim();
+
+  //get the parents ul's id attribute
+  var status = $(this).closest(".list-group").attr("id").replace("list-","");
+
+  //get the tasks position in the list
+  var index = $(this).closest(".list-group-item").index();
+
+  //update task in array to re-save the localstorage
+  tasks[status][index].date = date;
+
+  //recreate the span element that was replaced with input
+  var taskSpan = $("<span>").addClass("badge badge-primary badge-pill").text(date);
+
+  //replace input span we created above
+  $(this).replaceWith(taskSpan);
+
+});
+
 
 
 
